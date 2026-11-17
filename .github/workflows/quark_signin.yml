@@ -2,8 +2,10 @@ name: 夸克网盘每日签到
 
 on:
   schedule:
-    - cron: "0 1 * * *" # 北京时间 09:00
-    - cron: "0 5 * * *" # 北京时间 13:00，失败兜底
+    - cron: "0 7 * * *"          # 北京时间 07:00
+      timezone: Asia/Shanghai
+    - cron: "0 12 * * *"         # 北京时间 12:00，失败兜底
+      timezone: Asia/Shanghai
   workflow_dispatch:
 
 permissions:
@@ -18,6 +20,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      # ========== 调试步骤 ==========
+      - name: 打印触发信息
+        run: |
+          echo "=========================================="
+          echo "触发事件: ${{ github.event_name }}"
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "触发的 cron: ${{ github.event.schedule }}"
+          else
+            echo "触发的 cron: （手动触发，无 cron）"
+          fi
+          echo "当前 UTC 时间: $(date -u '+%Y-%m-%d %H:%M:%S %Z')"
+          echo "当前北京时间: $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M:%S %Z')"
+          echo "=========================================="
+      # =============================
+
       - name: 获取北京时间日期
         id: date
         shell: bash
