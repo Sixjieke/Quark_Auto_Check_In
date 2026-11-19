@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: "37 0 * * *"          # 北京时间 00:37
       timezone: Asia/Shanghai
-    - cron: "12 7 * * *"          # 北京时间 07:12
+    - cron: "37 7 * * *"          # 北京时间 07:37
       timezone: Asia/Shanghai
   workflow_dispatch:
 
