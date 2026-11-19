@@ -1,12 +1,12 @@
 name: 夸克网盘每日签到
 
 on:
-  schedule:
-    - cron: "17 1 * * *"          # 北京时间 01:17
-      timezone: Asia/Shanghai
-    - cron: "17 7 * * *"          # 北京时间 07:17
-      timezone: Asia/Shanghai
-  workflow_dispatch:
+  workflow_dispatch:                # 只保留手动/外部触发
+    inputs:
+      reason:
+        description: '触发原因'
+        required: false
+        default: '外部定时触发'
 
 permissions:
   contents: read
@@ -25,11 +25,7 @@ jobs:
         run: |
           echo "=========================================="
           echo "触发事件: ${{ github.event_name }}"
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            echo "触发的 cron: ${{ github.event.schedule }}"
-          else
-            echo "触发的 cron: （手动触发，无 cron）"
-          fi
+          echo "触发原因: ${{ github.event.inputs.reason }}"
           echo "当前 UTC 时间: $(date -u '+%Y-%m-%d %H:%M:%S %Z')"
           echo "当前北京时间: $(TZ='Asia/Shanghai' date '+%Y-%m-%d %H:%M:%S %Z')"
           echo "=========================================="
@@ -59,11 +55,8 @@ jobs:
         if: steps.cache-success.outputs.cache-hit != 'true'
         shell: bash
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            max_delay=10
-          else
-            max_delay=60
-          fi
+          # 外部触发时延迟可以短一点
+          max_delay=15
           delay=$((RANDOM % (max_delay + 1)))
           echo "随机延迟 ${delay} 秒后开始执行。"
           sleep "$delay"
