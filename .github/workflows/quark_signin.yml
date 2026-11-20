@@ -38,7 +38,7 @@ jobs:
 
       - name: 恢复今日成功标记
         id: cache-success
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: .cache/quark-signin
           key: quark-signed-${{ steps.date.outputs.today }}
@@ -49,7 +49,7 @@ jobs:
 
       - name: 检出代码
         if: steps.cache-success.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 随机延迟
         if: steps.cache-success.outputs.cache-hit != 'true'
@@ -63,7 +63,7 @@ jobs:
 
       - name: 设置 Python 环境
         if: steps.cache-success.outputs.cache-hit != 'true'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
@@ -86,7 +86,7 @@ jobs:
 
       - name: 保存今日成功标记
         if: success() && steps.cache-success.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v6
         with:
           path: .cache/quark-signin
           key: quark-signed-${{ steps.date.outputs.today }}
