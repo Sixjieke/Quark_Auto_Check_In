@@ -56,7 +56,7 @@ jobs:
         shell: bash
         run: |
           # 外部触发时延迟可以短一点
-          max_delay=15
+          max_delay=3
           delay=$((RANDOM % (max_delay + 1)))
           echo "随机延迟 ${delay} 秒后开始执行。"
           sleep "$delay"
